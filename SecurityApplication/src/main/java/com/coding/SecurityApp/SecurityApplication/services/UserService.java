@@ -4,6 +4,7 @@ import com.coding.SecurityApp.SecurityApplication.dto.LoginDto;
 import com.coding.SecurityApp.SecurityApplication.dto.SignUpDto;
 import com.coding.SecurityApp.SecurityApplication.dto.UserDto;
 import com.coding.SecurityApp.SecurityApplication.entities.User;
+import com.coding.SecurityApp.SecurityApplication.exceptions.ResourceNotFoundException;
 import com.coding.SecurityApp.SecurityApplication.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -32,6 +35,10 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
                 .orElseThrow(()->new UsernameNotFoundException("User  with email"+username+"not found"));
+    }
+
+    public User getUserById(Long userId){
+        return userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("User with id"+userId+"not found"));
     }
 
     public UserDto signUp(SignUpDto signUpDto) {
