@@ -4,11 +4,11 @@ spring:
       client:
         registration:
           google:
-            client-id: 170623908565-51m5qqtdpnpise106buh93s39fna2qqn.apps.googleusercontent.com
-            client-secret: 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
-          github:
-                client-id: ofiniwnwjg
-                client-secret: algenjwkt
-          facebook:
-                  client-id: oafmsajanglrjgn
-                  client-secret: jasknitn
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+#          github:
+#                client-id: ofiniwnwjg
+#                client-secret: algenjwkt
+#          facebook:
+#                  client-id: oafmsajanglrjgn
+#                  client-secret: jasknitn
