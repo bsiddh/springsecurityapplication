@@ -1,6 +1,8 @@
 package com.coding.SecurityApp.SecurityApplication.entities;
 
+import com.coding.SecurityApp.SecurityApplication.entities.enums.Permissions;
 import com.coding.SecurityApp.SecurityApplication.entities.enums.Role;
+import com.coding.SecurityApp.SecurityApplication.utils.PermissionMapping;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,9 +10,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.coding.SecurityApp.SecurityApplication.utils.PermissionMapping.getAuthoritiesForRole;
+
+//import static java.util.Arrays.stream;
+//import static jdk.nio.zipfs.ZipFileAttributeView.AttrID.permissions;
 
 @Getter
 @Setter
@@ -36,12 +44,19 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<SimpleGrantedAuthority> authorites = new HashSet<>();
+        roles.forEach(
+                role->{
+                    Set<SimpleGrantedAuthority> permissions=PermissionMapping.getAuthoritiesForRole(role);
+                    authorites.addAll(permissions);
+                    authorites.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+                }
+        );
 
-        return roles.stream()
-                .map(roles->new SimpleGrantedAuthority("ROLE_"+roles.name()))
-                .collect(Collectors.toSet());
+        return authorites;
     }
 
     @Override
